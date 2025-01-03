@@ -59,6 +59,12 @@ jobs:
 
     - if: matrix.arch == 'arm64'
       run: |
+        echo sources.list
+        sudo cat /etc/apt/sources.list
+        for f in ls /etc/apt/sources.list.d; do
+          echo $f
+          cat $f
+        done
         sudo sed -i 's/^deb /deb [arch=amd64] /' /etc/apt/sources.list
         echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -sc) main multiverse universe" | sudo tee -a /etc/apt/sources.list
         echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -sc)-security main multiverse universe" | sudo tee -a  /etc/apt/sources.list
