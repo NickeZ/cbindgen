@@ -103,7 +103,7 @@ jobs:
     - run: |
         sudo apt-get update
         sudo apt-get install -y qemu-user gcc-11-aarch64-linux-gnu libc6-arm64-cross
-        echo 'EXTRA_OPTS="-L /usr/arm-linux-gnueabi"' | tee -a /etc/qemu-binfmt.conf
+        echo 'EXTRA_OPTS="-L /usr/arm-linux-gnueabi"' | sudo tee -a /etc/qemu-binfmt.conf
 
     - name: Install stable Rust
       uses: dtolnay/rust-toolchain@stable
