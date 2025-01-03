@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - nickez/*
   pull_request:
     branches:
       - master
