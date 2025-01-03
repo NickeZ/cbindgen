@@ -60,10 +60,10 @@ jobs:
     - if: matrix.arch == 'arm64'
       run: |
         sudo sed -i 's/^deb /deb [arch=amd64] /' /etc/apt/sources.list
-        echo "deb [arch=arm64] http://ports.ubuntu.com/ jammy main multiverse universe" | sudo tee -a /etc/apt/sources.list
-        echo "deb [arch=arm64] http://ports.ubuntu.com/ jammy-security main multiverse universe" | sudo tee -a  /etc/apt/sources.list
-        echo "deb [arch=arm64] http://ports.ubuntu.com/ jammy-backports main multiverse universe" | sudo tee -a  /etc/apt/sources.list
-        echo "deb [arch=arm64] http://ports.ubuntu.com/ jammy-updates main multiverse universe" | sudo tee -a  /etc/apt/sources.list
+        echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -a) main multiverse universe" | sudo tee -a /etc/apt/sources.list
+        echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -a)-security main multiverse universe" | sudo tee -a  /etc/apt/sources.list
+        echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -a)-backports main multiverse universe" | sudo tee -a  /etc/apt/sources.list
+        echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -a)-updates main multiverse universe" | sudo tee -a  /etc/apt/sources.list
 
         sudo dpkg --add-architecture arm64
         sudo apt-get update
