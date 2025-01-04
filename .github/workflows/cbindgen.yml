@@ -54,15 +54,18 @@ jobs:
               CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_RUNNER: qemu-aarch64-static
               CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc-11
 
-    env:
-      CARGO_BUILD_TARGET: ${{matrix.env.CARGO_BUILD_TARGET}}
-      CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_RUNNER: ${{matrix.env.CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_RUNNER}}
-      CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: ${{matrix.env.CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER}}
-
     steps:
     - uses: actions/checkout@v3
 
-    - if: matrix.arch == 'arm64'
+    - name: Setup environment variables for cross compiling
+      if: matrix.arch != 'amd64'
+      run: |
+        echo CARGO_BUILD_TARGET=${{matrix.env.CARGO_BUILD_TARGET}} >> ${GITHUB_ENV}
+        echo CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_RUNNER=${{matrix.env.CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_RUNNER}} >> ${GITHUB_ENV}
+        echo CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=${{matrix.env.CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER}} >> ${GITHUB_ENV}
+
+    - name: Install cross linker and emulator
+      if: matrix.arch == 'arm64'
       run: |
         # Only works on noble (and later?)
         sudo sed -i '/^Components/a Architectures: amd64' /etc/apt/sources.list.d/ubuntu.sources
