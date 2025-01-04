@@ -59,12 +59,6 @@ jobs:
 
     - if: matrix.arch == 'arm64'
       run: |
-        echo sources.list
-        sudo cat /etc/apt/sources.list
-        for f in $(ls /etc/apt/sources.list.d); do
-          echo $f
-          cat /etc/apt/sources.list.d/$f
-        done
         # Only works on noble (and later?)
         sudo sed -i '/^Components/a Architectures: amd64' /etc/apt/sources.list.d/ubuntu.sources
         echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -sc) main multiverse universe" | sudo tee -a /etc/apt/sources.list.d/ports.list
@@ -74,13 +68,12 @@ jobs:
 
         sudo dpkg --add-architecture arm64
         sudo apt-get update
-        sudo apt-get install -y qemu-user-static gcc-11-aarch64-linux-gnu
-        sudo apt-get install -y libc6:arm64
+        sudo apt-get install -y qemu-user-static gcc-11-aarch64-linux-gnu libc6:arm64
 
     - name: Install stable Rust
       uses: dtolnay/rust-toolchain@stable
       with:
-        targets: ${{env.CARGO_BUILD_TARGET}}
+        targets: ${{matrix.env.CARGO_BUILD_TARGET}}
 
     - name: Install Python
       uses: actions/setup-python@v4
@@ -110,7 +103,7 @@ jobs:
     - name: Install nightly Rust
       uses: dtolnay/rust-toolchain@nightly
       with:
-        targets: ${{env.CARGO_BUILD_TARGET}}
+        targets: ${{matrix.env.CARGO_BUILD_TARGET}}
 
     - name: Test
       env:
