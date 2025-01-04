@@ -15,7 +15,7 @@ on:
 jobs:
   rustfmt-clippy:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
     - uses: actions/checkout@v3
@@ -42,6 +42,8 @@ jobs:
         cargo +${{steps.msrv.outputs.name}} test nonexistent-test --verbose
 
   build:
+    runs-on: ubuntu-24.04
+
     strategy:
       matrix:
         arch: [amd64, arm64]
@@ -56,8 +58,6 @@ jobs:
       CARGO_BUILD_TARGET: ${{matrix.env.CARGO_BUILD_TARGET}}
       CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_RUNNER: ${{matrix.env.CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_RUNNER}}
       CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: ${{matrix.env.CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER}}
-
-    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
