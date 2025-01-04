@@ -65,11 +65,11 @@ jobs:
           echo $f
           cat /etc/apt/sources.list.d/$f
         done
-        sudo sed -i 's/^deb /deb [arch=amd64] /' /etc/apt/sources.list
-        echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -sc) main multiverse universe" | sudo tee -a /etc/apt/sources.list
-        echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -sc)-security main multiverse universe" | sudo tee -a  /etc/apt/sources.list
-        echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -sc)-backports main multiverse universe" | sudo tee -a  /etc/apt/sources.list
-        echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -sc)-updates main multiverse universe" | sudo tee -a  /etc/apt/sources.list
+        sudo sed -i '/^Components/a Architectures: amd64' /etc/apt/sources.list.d/ubuntu.list
+        echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -sc) main multiverse universe" | sudo tee -a /etc/apt/sources.list.d/ports.list
+        echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -sc)-security main multiverse universe" | sudo tee -a  /etc/apt/sources.list.d/ports.list
+        echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -sc)-backports main multiverse universe" | sudo tee -a  /etc/apt/sources.list.d/ports.list
+        echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -sc)-updates main multiverse universe" | sudo tee -a  /etc/apt/sources.list.d/ports.list
 
         sudo dpkg --add-architecture arm64
         sudo apt-get update
