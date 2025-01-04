@@ -65,7 +65,8 @@ jobs:
           echo $f
           cat /etc/apt/sources.list.d/$f
         done
-        sudo sed -i '/^Components/a Architectures: amd64' /etc/apt/sources.list.d/ubuntu.list
+        # Only works on noble (and later?)
+        sudo sed -i '/^Components/a Architectures: amd64' /etc/apt/sources.list.d/ubuntu.sources
         echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -sc) main multiverse universe" | sudo tee -a /etc/apt/sources.list.d/ports.list
         echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -sc)-security main multiverse universe" | sudo tee -a  /etc/apt/sources.list.d/ports.list
         echo "deb [arch=arm64] http://ports.ubuntu.com/ $(lsb_release -sc)-backports main multiverse universe" | sudo tee -a  /etc/apt/sources.list.d/ports.list
