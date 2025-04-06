@@ -14,26 +14,35 @@ jobs:
       # someone with permissions to create a tag.
       contents: write
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
     - uses: actions/checkout@v3
 
     - name: Install stable
       uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: aarch64-unknown-linux-gnu
 
-    - name: semver
+    - name: Install cross libc
       run: |
-        cargo +stable install cargo-semver-checks --locked
-        cargo +stable semver-checks check-release
+        sudo apt-get update
+        sudo apt-get install -y libc6-arm64-cross gcc-11-aarch64-linux-gnu
+
+     - name: semver
+       run: |
+         cargo +stable install cargo-semver-checks --locked
+         cargo +stable semver-checks check-release
 
     - name: Build cbindgen
       run: |
         cargo +stable build --release
+        CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc-11 cargo +stable build --target aarch64-unknown-linux-gnu --release
 
     - name: Strip cbindgen
       run: |
         strip target/release/cbindgen
+        strip target/aarch64-unknown-linux-gnu/release/cbindgen
 
     - name: Handle release data and files
       id: tagName
@@ -51,6 +60,6 @@ jobs:
     - name: Create a release
       run: |
         TAG=${{ steps.tagName.outputs.version }}
-        gh release create ${TAG} --title "${TAG}" --notes-file "CHANGES.txt" --draft 'target/release/cbindgen#cbindgen-ubuntu20.04'
+        gh release create ${TAG} --title "${TAG}" --notes-file "CHANGES.txt" --draft 'target/release/cbindgen#cbindgen-ubuntu22.04' 'target/aarch64-unknown-linux-gnu/release/cbindgen#cbindgen-ubuntu22.04-aarch64'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
